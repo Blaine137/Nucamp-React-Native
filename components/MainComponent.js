@@ -3,7 +3,6 @@ import Directory from './DirectoryComponent';
 import CampsiteInfo from './CampsiteInfoComponent';
 import { View, Platform } from 'react-native';
 import { CAMPSITES } from '../shared/campsites';
-import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import { createStackNavigator } from 'react-navigation';
 
 const DirectoryNavigator = createStackNavigator(
