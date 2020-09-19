@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, FlatList, Modal, Button, StyleSheet } from 'react-native';
 import { Rating, Input } from 'react-native-elements';
 import { Card, Icon } from 'react-native-elements';
-import { CAMPSITES } from '../shared/campsites';
-import { COMMENTS } from '../shared/comments';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-import { postFavorite } from '../redux/ActionCreators';
+import { postFavorite, postComment } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -17,7 +15,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    postFavorite: campsiteId => (postFavorite(campsiteId))
+    postFavorite: campsiteId => (postFavorite(campsiteId)),
+    postComment: (campsiteId, rating, author, text) => (postComment(campsiteId, rating, author, text))
 };
 
 function RenderComments({comments}) {
@@ -112,8 +111,8 @@ class CampsiteInfo extends Component {
     }
 
     handleComment = (campsiteId) => {
-        console.log(JSON.stringify(this.state))
-        this.toggleModal()
+        this.props.postComment(campsiteId, this.state.rating, this.state.author, this.state.text );
+        this.toggleModal();
     }
 
     resetForm = () => {
@@ -162,7 +161,7 @@ class CampsiteInfo extends Component {
                                     title='Submit'
                                     color='#5637DD'
                                     onPress={() => {
-                                        this.handleComment();
+                                        this.handleComment(campsiteId);
                                         this.resetForm();
                                     }}/>
                             </View>
