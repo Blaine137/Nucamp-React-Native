@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, FlatList, Modal, Button, StyleSheet } from 'react-native';
+import { Rating, Input } from 'react-native-elements';
 import { Card, Icon } from 'react-native-elements';
 import { CAMPSITES } from '../shared/campsites';
 import { COMMENTS } from '../shared/comments';
@@ -25,7 +26,11 @@ function RenderComments({comments}) {
         return (
             <View style={{margin: 10}}>
                 <Text style={{fontSize: 14}}>{item.text}</Text>
-                <Text style={{fontSize: 12}}>{item.rating} Stars</Text>
+                <Rating
+                    readonly
+                    startingValue={item.rating}
+                    imageSize={10}
+                    style={{alignItems: 'flex-start', paddingVertical: 5}}/>
                 <Text style={{fontSize: 12}}>{`-- ${item.author}, ${item.date}`}</Text>
             </View>
         );
@@ -87,7 +92,10 @@ class CampsiteInfo extends Component {
         super(props);
         this.state = {
             favorite: false,
-            showModal: false
+            showModal: false,
+            rating: 5,
+            author: '',
+            text: ''
         };
     }
 
@@ -101,6 +109,15 @@ class CampsiteInfo extends Component {
 
     toggleModal = () => {
         this.setState( { showModal: !this.state.showModal } );
+    }
+
+    handleComment = (campsiteId) => {
+        console.log(JSON.stringify(this.state))
+        this.toggleModal()
+    }
+
+    resetForm = () => {
+        this.setState( { rating: 5, author: '', text: '' } );
     }
 
     render() {
@@ -117,15 +134,41 @@ class CampsiteInfo extends Component {
                 />
                 <RenderComments comments={comments} />
                 <Modal
-                    style={styles.modal}
                     animationType={'slide'}
                     transparent={false}
                     visible={this.state.showModal}
                     onRequestClose={() => this.toggleModal()}>
-                    <View style={{margin: 10}}>
-                        <View>
+                    <View style={styles.modal}>
+                        <Rating
+                            showRating
+                            startingValue={this.state.rating}
+                            imageSize={40}
+                            onFinishRating={(rating) => this.setState({rating: rating})}
+                            style={{paddingVertical: 10}}/>
+                        <Input
+                            placeholder='Author Input'
+                            leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                            leftIconContainerStyle={{paddingRight: 10}}
+                            onChangeText={(author => this.setState({author: author}))}
+                            value={this.state.author}/>
+                        <Input
+                            placeholder='Comments Input'
+                            leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
+                            leftIconContainerStyle={{paddingRight: 10}}
+                            onChangeText={(comment => this.setState({text: comment}))}
+                            value={this.state.text}/>
+                            <View>
+                                <Button
+                                    title='Submit'
+                                    color='#5637DD'
+                                    onPress={() => {
+                                        this.handleComment();
+                                        this.resetForm();
+                                    }}/>
+                            </View>
+                        <View style={{margin: 10}}>
                             <Button
-                                onPress={() => {this.toggleModal()}}
+                                onPress={() => {this.toggleModal(); this.resetForm();}}
                                 color='#808080'
                                 title='cancel'/>
                         </View>
