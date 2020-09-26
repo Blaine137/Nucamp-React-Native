@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, FlatList,
-    Modal, Button, StyleSheet,
-    Alert, PanResponder } from 'react-native';
+import { Text, View, ScrollView, FlatList, Modal, Button, StyleSheet, Alert, PanResponder } from 'react-native';
 import { Rating, Input } from 'react-native-elements';
 import { Card, Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
@@ -59,6 +57,8 @@ function RenderCampsite(props) {
 
     const recognizeDrag = ({dx}) => (dx < -200) ? true : false;
 
+    const recognizeComment = ({dx}) => (dx > 200) ? true : false;
+
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onPanResponderGrant: () => {
@@ -85,6 +85,8 @@ function RenderCampsite(props) {
                     ],
                     { cancelable: false }
                 );
+            } else if(recognizeComment(gestureState)) {
+                 props.onShowModal();
             }
             return true;
         }
@@ -92,12 +94,7 @@ function RenderCampsite(props) {
 
     if (campsite) {
         return (
-            <Animatable.View
-                animation='fadeInDown'
-                duration={2000}
-                delay={1000}
-                ref={view}
-                {...panResponder.panHandlers}>
+            <Animatable.View animation='fadeInDown' duration={2000} delay={1000} ref={view} {...panResponder.panHandlers}>
                 <Card
                     featuredTitle={campsite.name}
                     image={{uri: baseUrl + campsite.image}}>
