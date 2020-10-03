@@ -4,9 +4,9 @@ import { Input, CheckBox, Button, Icon } from 'react-native-elements';
 import * as SecureStore from 'expo-secure-store';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import * as ImageManipulator from 'expo-image-manipulator';
 import { createBottomTabNavigator } from 'react-navigation';
 import { baseUrl } from '../shared/baseUrl';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 class LoginTab extends Component {
 
@@ -155,11 +155,10 @@ class RegisterTab extends Component {
             });
             if (!capturedImage.cancelled) {
                 console.log(capturedImage);
-                this.proccessImage(capturedImage.uri);
+                this.processImage(capturedImage.uri);
             }
         }
     }
-
     getImageFromGallery = async ()=> {
         const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if ( cameraRollPermission.status === 'granted') {
@@ -197,7 +196,7 @@ class RegisterTab extends Component {
             <ScrollView>
                 <View style={styles.container}>
                     <View style={styles.imageContainer}>
-                    <Image
+                        <Image
                             source={{uri: this.state.imageUrl}}
                             loadingIndicatorSource={require('./images/logo.png')}
                             style={styles.image}
